@@ -1,6 +1,13 @@
-import { sql } from "@vercel/postgres";
+import { neon } from "@neondatabase/serverless";
+
+function getSQL() {
+  const databaseUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+  if (!databaseUrl) throw new Error("DATABASE_URL or POSTGRES_URL env var is required");
+  return neon(databaseUrl);
+}
 
 export async function initDB() {
+  const sql = getSQL();
   await sql`
     CREATE TABLE IF NOT EXISTS properties (
       id SERIAL PRIMARY KEY,
@@ -70,21 +77,25 @@ export interface Rating {
 }
 
 export async function getProperties() {
-  const { rows } = await sql`SELECT * FROM properties ORDER BY deal_score DESC`;
+  const sql = getSQL();
+  const rows = await sql`SELECT * FROM properties ORDER BY deal_score DESC`;
   return rows as Property[];
 }
 
 export async function getRatings(userName: string) {
-  const { rows } = await sql`SELECT * FROM ratings WHERE user_name = ${userName}`;
+  const sql = getSQL();
+  const rows = await sql`SELECT * FROM ratings WHERE user_name = ${userName}`;
   return rows as Rating[];
 }
 
 export async function getAllRatings() {
-  const { rows } = await sql`SELECT * FROM ratings`;
+  const sql = getSQL();
+  const rows = await sql`SELECT * FROM ratings`;
   return rows as Rating[];
 }
 
 export async function upsertRating(propertyId: number, userName: string, rating: string | null, notes: string) {
+  const sql = getSQL();
   await sql`
     INSERT INTO ratings (property_id, user_name, rating, notes, updated_at)
     VALUES (${propertyId}, ${userName}, ${rating}, ${notes}, NOW())

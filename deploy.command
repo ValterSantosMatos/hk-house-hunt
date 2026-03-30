@@ -1,12 +1,13 @@
 #!/bin/bash
 cd ~/Projects/house-hunt/app
 rm -f .git/index.lock
-rm -f next.config.ts
 git add -A
-git commit -m "Fix: rename next.config.ts to next.config.mjs for Vercel compatibility"
+git commit -m "Upgrade: Neon SDK, Next.js 15, React 19, scanner API endpoints, feedback loop"
 git push
 echo ""
-echo "Done! Fix pushed to GitHub."
-echo "Go back to Vercel and click Redeploy."
+echo "Done! Changes pushed to GitHub."
+echo "Vercel will auto-redeploy."
+echo ""
+echo "REMEMBER: Add SCANNER_API_KEY to Vercel env vars!"
 echo "Press any key to close..."
 read -n 1

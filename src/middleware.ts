@@ -6,7 +6,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Allow public routes
-  if (pathname.startsWith("/login") || pathname.startsWith("/api/auth") || pathname.startsWith("/api/seed") || pathname.startsWith("/_next") || pathname === "/favicon.ico") {
+  if (pathname.startsWith("/login") || pathname.startsWith("/api/auth") || pathname.startsWith("/api/seed") || pathname.startsWith("/api/properties") || pathname.startsWith("/api/ratings/export") || pathname.startsWith("/_next") || pathname === "/favicon.ico") {
     return NextResponse.next();
   }
 

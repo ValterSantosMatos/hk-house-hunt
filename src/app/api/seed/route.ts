@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server";
-import { sql } from "@vercel/postgres";
+import { neon } from "@neondatabase/serverless";
 import { initDB } from "@/lib/db";
 import { SEED_PROPERTIES } from "@/lib/properties-data";
 
 export async function POST() {
   try {
     await initDB();
+
+    const databaseUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+    if (!databaseUrl) throw new Error("DATABASE_URL or POSTGRES_URL env var is required");
+    const sql = neon(databaseUrl);
 
     for (const p of SEED_PROPERTIES) {
       await sql`
